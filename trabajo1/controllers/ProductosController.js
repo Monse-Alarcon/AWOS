@@ -15,7 +15,7 @@ const createProducto = async (req, res) => {
     const { nombre, precio, stock} = req.body;
     try {
         const { rows }= await pool.query(
-            'INSERT INTO productos (nombre, precio, stock) VALUES ($1, $2, $3) RETURNING id',
+            'INSERT INTO productos (nombre, precio, stock) VALUES ($1, $2, $3) RETURNING *',
             [nombre, precio, stock]
         );
         res.status(201).json({ id: rows[0].id, nombre, precio, stock });
@@ -40,7 +40,7 @@ const updateProducto = async (req, res) => {
         }
 
         const  { rowCount } = await pool.query(
-            'UPDATE productos SET precio = $1, stock = $2 WHERE id = $3',
+            'UPDATE productos SET precio = $1, stock = $2 WHERE id = $3 RETURNING *',
             [precio, stock, id]
         );
 
@@ -62,7 +62,7 @@ const deleteProducto = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const { rowCount } = await pool.query(
-            'DELETE FROM productos WHERE id = $1',
+            'DELETE FROM productos WHERE id = $1 RETURNING *',
             [id]
         );  
         if (rowCount === 0) {
