@@ -3,7 +3,7 @@ const lista = document.getElementById('listaProductos');
 
 boton.addEventListener("click", async() => {
     try{
-        const respuesta = await fetch('http://localhost:4000/api/productos');
+        const respuesta = await fetch('http://localhost:3000/api/productos');
         const datos = await respuesta.json();
         
         
