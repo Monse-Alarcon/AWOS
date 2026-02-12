@@ -59,7 +59,34 @@ const poblarProductos = async (request, response) => {
     }
 };
 
+// buscar 
+const buscarProductos = async (request, response) => {
+    try {
+        const { texto } = request.params;
+
+        const query = `
+            SELECT p.*, c.nombre AS categoria
+            FROM productos p
+            JOIN categoria c ON p.id_categoria = c.id
+            WHERE 
+                p.nombre ILIKE $1
+                OR p.descripcion ILIKE $1
+                OR c.nombre ILIKE $1
+        `;
+
+        const valores = [`%${texto}%`];
+
+        const result = await pool.query(query, valores);
+
+        response.status(200).json(result.rows);
+
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({ error: error.message });
+    }
+};
 
 
 
-module.exports = { poblarProductos };
+
+module.exports = { poblarProductos, buscarProductos };
