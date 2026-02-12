@@ -1,5 +1,33 @@
 const pool = require('../config/db');
 
+const poblarProductos = async (request, response) =>{
+    try{
+        //fech
+        const  apiFetch= await fetch('http://fakestoreapi.com/products');
+        const products= await apiFetch.json();
+
+        let inserciones = 0;
+        //destructurar el objeto 
+        for(const product of products){
+            const {title, price, descriptio, image} = product;
+
+            const stock = Math.floor(Math.random() * 50) + 1; // Generar un stock aleatorio entre 1 y 50
+
+            const query = ' INSERT INTO productos (nombre, precio, stock,  descripcion, imagen_url ) VALUES ($1,$2,$3,$4,$5) '
+            inserciones++;
+        }
+
+        response.status(200).json(
+            { 
+                message: `Carga masiva exitosa`,
+                cantidad: inserciones
+            }
+        );
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 const getProductos = async (req, res) => {
     try {
         const {rows} = await pool.query('SELECT * FROM productos');
