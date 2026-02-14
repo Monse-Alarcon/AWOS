@@ -95,7 +95,29 @@ const buscarProductos = async (request, response) => {
     }
 };
 
+const obtenerProductos = async (request, response) => {
+    try {
+        const query = `
+            SELECT 
+                p.nombre,
+                p.descripcion,
+                c.nombre AS categoria,
+                p.precio,
+                p.stock
+            FROM productos p
+            JOIN categoria c ON p.id_categoria = c.id
+        `;
+
+        const result = await pool.query(query);
+        response.status(200).json(result.rows);
+
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({ error: "Error del servidor" });
+    }
+};
 
 
 
-module.exports = { poblarProductos, buscarProductos };
+
+module.exports = { poblarProductos, buscarProductos, obtenerProductos };
